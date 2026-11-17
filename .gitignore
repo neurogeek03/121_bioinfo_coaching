@@ -1,9 +1,22 @@
+# --- Nextflow run outputs ---
 results/
 work/
 .nextflow/
 .nextflow.log*
-CLAUDE.md
-docs/teaching_notes.md
+dag.*                 # auto-generated pipeline DAG (dag.html / dag.mmd / dag.png)
+
+# --- stray outputs if a bin/ step is run directly (not via Nextflow) ---
+counts.tsv.gz
+*_series_matrix.txt.gz
+*.rds
+sample_sheet.csv
+
+# --- R session junk ---
 .Rhistory
 .RData
-dag.*
+
+# --- private, not shared with client ---
+CLAUDE.md
+docs/teaching_notes.md
+
+# Note: hand-made illustrations are kept (docs/pipeline.mmd is tracked).

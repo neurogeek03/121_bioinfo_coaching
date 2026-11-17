@@ -30,10 +30,12 @@ Open in GitHub Codespaces — the dev container installs R + Bioconductor packag
 Java, and Nextflow on first build.
 
 ## Pipeline diagram
-Generate it straight from the pipeline (no manual drawing):
+The diagram below renders automatically in GitHub's Markdown preview (in Codespaces:
+open `README.md`, then the preview button) — nothing to install.
+
+To regenerate it straight from the pipeline (no manual drawing):
 ```
-nextflow run main.nf -preview -with-dag dag.html   # open in a browser
-nextflow run main.nf -preview -with-dag dag.png    # needs: apt-get install graphviz
+nextflow run main.nf -preview -with-dag dag.html   # -preview = build the DAG without running; open the HTML in a browser
 ```
 A cleaned, labelled version lives in `docs/pipeline.mmd`:
 ```mermaid
