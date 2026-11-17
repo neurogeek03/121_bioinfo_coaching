@@ -50,4 +50,4 @@ dev.off()
 
 ## 5. Save --------------------------------------------------------------------
 saveRDS(dds, "dds.rds")          # binary handoff to 02_dge.R
-cat("genes:", nrow(dds), " samples:", ncol(dds), "\n")   # sanity -> 23292 x 58
+cat("genes:", nrow(dds), " samples:", ncol(dds), "\n")   # sanity -> 23022 x 49
