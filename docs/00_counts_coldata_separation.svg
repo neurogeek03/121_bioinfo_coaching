@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1480 640" width="1480" height="640"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 660" width="1600" height="660"
      font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
   <style>
     .figTitle{ font-size:28px;   font-weight:700; fill:#26323C; }
@@ -9,121 +9,139 @@
     .boxSub  { font-size:12.5px; font-weight:500; fill:#5A6570; }
     .colHd   { font-size:12px;   font-weight:700; }
     .cellLbl { font-size:11px;   font-weight:600; fill:#7A848E; }
+    .drop    { font-size:12px;   font-weight:700; fill:#C0675F; }
     .code    { font-size:14.5px; font-weight:700; fill:#2E3A44; font-family:'SFMono-Regular',Menlo,Consolas,monospace; }
-    .join    { font-size:12.5px; font-weight:700; fill:#8A6D1B; }
+    .alignHd { font-size:14.5px; font-weight:700; fill:#8A6D1B; }
+    .alignLn { font-size:12.5px; font-weight:600; fill:#6B5410; }
     .mono    { font-family:'SFMono-Regular',Menlo,Consolas,monospace; }
   </style>
 
   <!-- BACKGROUND -->
-  <rect x="0" y="0" width="1480" height="640" fill="#ffffff"/>
+  <rect x="0" y="0" width="1600" height="660" fill="#ffffff"/>
 
   <!-- TITLE BLOCK -->
   <g>
-    <text class="figTitle" x="60" y="54">Step 00 &#8212; why counts and colData are two files</text>
-    <text class="figSub" x="60" y="80">They come from two different downloads, have different shapes, and DESeq2 takes them as two arguments.</text>
+    <text class="figTitle" x="60" y="52">Step 00 &#8212; two files, aligned by sample ID</text>
+    <text class="figSub" x="60" y="78">counts (all 86 samples, file order) and colData (59 HiSeq samples) are built separately, then line 38 subsets + reorders counts to match.</text>
   </g>
 
   <!-- SOURCE : counts download -->
   <g>
-    <rect x="60" y="150" width="250" height="78" rx="12" fill="#F3F5F7" stroke="#DCE2E7" stroke-width="2"/>
-    <text class="srcTitle mono" x="78" y="183">counts.tsv.gz</text>
-    <text class="srcSub" x="78" y="205">NCBI reprocessed counts</text>
-    <text class="srcSub" x="78" y="221">integer &#183; all 86 samples</text>
+    <rect x="60" y="150" width="238" height="74" rx="12" fill="#F3F5F7" stroke="#DCE2E7" stroke-width="2"/>
+    <text class="srcTitle mono" x="78" y="181">counts.tsv.gz</text>
+    <text class="srcSub" x="78" y="202">NCBI counts &#183; integer</text>
+    <text class="srcSub" x="78" y="218">all 86 samples</text>
   </g>
 
   <!-- SOURCE : metadata download -->
   <g>
-    <rect x="60" y="412" width="250" height="78" rx="12" fill="#F3F5F7" stroke="#DCE2E7" stroke-width="2"/>
-    <text class="srcTitle mono" x="78" y="445">series_matrix.txt.gz</text>
-    <text class="srcSub" x="78" y="467">GEO GPL16791 (HiSeq)</text>
-    <text class="srcSub" x="78" y="483">metadata &#183; 59 samples</text>
+    <rect x="60" y="430" width="238" height="74" rx="12" fill="#F3F5F7" stroke="#DCE2E7" stroke-width="2"/>
+    <text class="srcTitle mono" x="78" y="461">series_matrix.txt.gz</text>
+    <text class="srcSub" x="78" y="482">GEO GPL16791 (HiSeq)</text>
+    <text class="srcSub" x="78" y="498">59 samples</text>
   </g>
 
   <!-- CONNECTORS source to file -->
   <g fill="none" stroke="#CBD3DA" stroke-width="3">
-    <path d="M310,189 C 360,189 360,215 410,215"/>
-    <path d="M310,451 C 360,451 360,425 410,425"/>
+    <path d="M298,187 C 340,187 340,210 382,210"/>
+    <path d="M298,467 C 340,467 340,444 382,444"/>
   </g>
   <g fill="#B7C0C8">
-    <path d="M404,208 l14,7 l-14,7 z"/>
-    <path d="M404,418 l14,7 l-14,7 z"/>
+    <path d="M376,203 l14,7 l-14,7 z"/>
+    <path d="M376,437 l14,7 l-14,7 z"/>
   </g>
 
-  <!-- COUNTS FILE : genes x samples -->
+  <!-- COUNTS FILE : genes x samples (file order, extra dropped col) -->
   <g>
-    <rect x="420" y="120" width="470" height="195" rx="16" fill="#FFFFFF" stroke="#DCE2E7" stroke-width="2"/>
-    <rect x="428" y="128" width="454" height="6" rx="3" fill="#4C57C4"/>
-    <text class="boxTitle mono" x="448" y="165">counts.rds</text>
-    <text class="boxSub" x="568" y="165">genes &#215; samples</text>
-    <text class="cellLbl" x="868" y="165" text-anchor="end">large &#183; numeric &#183; frozen</text>
+    <rect x="392" y="118" width="500" height="200" rx="16" fill="#FFFFFF" stroke="#DCE2E7" stroke-width="2"/>
+    <rect x="400" y="126" width="484" height="6" rx="3" fill="#4C57C4"/>
+    <text class="boxTitle mono" x="420" y="163">counts.rds</text>
+    <text class="boxSub" x="540" y="163">genes &#215; samples</text>
+    <text class="cellLbl" x="872" y="163" text-anchor="end">86 cols &#183; file order</text>
     <g class="mono">
-      <text class="colHd" fill="#4C57C4" x="560" y="198" text-anchor="middle">S1</text>
-      <text class="colHd" fill="#4C57C4" x="650" y="198" text-anchor="middle">S2</text>
-      <text class="colHd" fill="#4C57C4" x="740" y="198" text-anchor="middle">S3</text>
-      <text class="colHd" fill="#4C57C4" x="830" y="198" text-anchor="middle">S4</text>
-      <text class="cellLbl" x="448" y="230">CXCL8</text>
-      <text class="cellLbl" x="560" y="230" text-anchor="middle">42</text>
-      <text class="cellLbl" x="650" y="230" text-anchor="middle">17</text>
-      <text class="cellLbl" x="740" y="230" text-anchor="middle">88</text>
-      <text class="cellLbl" x="830" y="230" text-anchor="middle">31</text>
-      <text class="cellLbl" x="448" y="258">IL1B</text>
-      <text class="cellLbl" x="560" y="258" text-anchor="middle">5</text>
-      <text class="cellLbl" x="650" y="258" text-anchor="middle">120</text>
-      <text class="cellLbl" x="740" y="258" text-anchor="middle">63</text>
-      <text class="cellLbl" x="830" y="258" text-anchor="middle">9</text>
-      <text class="cellLbl" x="448" y="286">FOS</text>
-      <text class="cellLbl" x="560" y="286" text-anchor="middle">77</text>
-      <text class="cellLbl" x="650" y="286" text-anchor="middle">24</text>
-      <text class="cellLbl" x="740" y="286" text-anchor="middle">51</text>
-      <text class="cellLbl" x="830" y="286" text-anchor="middle">40</text>
+      <!-- columns in file order, S9 is a non-HiSeq sample to be dropped -->
+      <text class="colHd" fill="#4C57C4" x="540" y="196" text-anchor="middle">S3</text>
+      <text class="colHd" fill="#4C57C4" x="620" y="196" text-anchor="middle">S1</text>
+      <text class="drop"  x="700" y="196" text-anchor="middle" text-decoration="line-through">S9</text>
+      <text class="colHd" fill="#4C57C4" x="780" y="196" text-anchor="middle">S4</text>
+      <text class="colHd" fill="#4C57C4" x="858" y="196" text-anchor="middle">S2</text>
+      <text class="cellLbl" x="420" y="228">CXCL8</text>
+      <text class="cellLbl" x="540" y="228" text-anchor="middle">88</text>
+      <text class="cellLbl" x="620" y="228" text-anchor="middle">42</text>
+      <text class="drop"   x="700" y="228" text-anchor="middle" text-decoration="line-through">13</text>
+      <text class="cellLbl" x="780" y="228" text-anchor="middle">31</text>
+      <text class="cellLbl" x="858" y="228" text-anchor="middle">17</text>
+      <text class="cellLbl" x="420" y="256">IL1B</text>
+      <text class="cellLbl" x="540" y="256" text-anchor="middle">63</text>
+      <text class="cellLbl" x="620" y="256" text-anchor="middle">5</text>
+      <text class="drop"   x="700" y="256" text-anchor="middle" text-decoration="line-through">90</text>
+      <text class="cellLbl" x="780" y="256" text-anchor="middle">9</text>
+      <text class="cellLbl" x="858" y="256" text-anchor="middle">120</text>
+      <text class="cellLbl" x="420" y="284">FOS</text>
+      <text class="cellLbl" x="540" y="284" text-anchor="middle">51</text>
+      <text class="cellLbl" x="620" y="284" text-anchor="middle">77</text>
+      <text class="drop"   x="700" y="284" text-anchor="middle" text-decoration="line-through">8</text>
+      <text class="cellLbl" x="780" y="284" text-anchor="middle">40</text>
+      <text class="cellLbl" x="858" y="284" text-anchor="middle">24</text>
+    </g>
+    <text class="drop" x="700" y="306" text-anchor="middle" font-size="10.5">not in colData &#8594; dropped</text>
+  </g>
+
+  <!-- COLDATA FILE : samples x covariates (defines target order) -->
+  <g>
+    <rect x="392" y="360" width="500" height="212" rx="16" fill="#FFFFFF" stroke="#DCE2E7" stroke-width="2"/>
+    <rect x="400" y="368" width="484" height="6" rx="3" fill="#C9761B"/>
+    <text class="boxTitle mono" x="420" y="405">coldata.rds</text>
+    <text class="boxSub" x="550" y="405">samples &#215; covariates</text>
+    <text class="cellLbl" x="872" y="405" text-anchor="end">59 rows &#183; defines the order</text>
+    <g class="mono">
+      <text class="colHd" fill="#C9761B" x="442" y="437">sample</text>
+      <text class="colHd" fill="#C9761B" x="580" y="437" text-anchor="middle">condition</text>
+      <text class="colHd" fill="#C9761B" x="710" y="437" text-anchor="middle">sex</text>
+      <text class="colHd" fill="#C9761B" x="820" y="437" text-anchor="middle">rin</text>
+      <text class="cellLbl" x="442" y="465">S1</text>
+      <text class="cellLbl" x="580" y="465" text-anchor="middle">CON</text>
+      <text class="cellLbl" x="710" y="465" text-anchor="middle">M</text>
+      <text class="cellLbl" x="820" y="465" text-anchor="middle">7.2</text>
+      <text class="cellLbl" x="442" y="491">S2</text>
+      <text class="cellLbl" x="580" y="491" text-anchor="middle">MDD</text>
+      <text class="cellLbl" x="710" y="491" text-anchor="middle">F</text>
+      <text class="cellLbl" x="820" y="491" text-anchor="middle">6.8</text>
+      <text class="cellLbl" x="442" y="517">S3</text>
+      <text class="cellLbl" x="580" y="517" text-anchor="middle">CON</text>
+      <text class="cellLbl" x="710" y="517" text-anchor="middle">F</text>
+      <text class="cellLbl" x="820" y="517" text-anchor="middle">8.1</text>
+      <text class="cellLbl" x="442" y="543">S4</text>
+      <text class="cellLbl" x="580" y="543" text-anchor="middle">MDD</text>
+      <text class="cellLbl" x="710" y="543" text-anchor="middle">M</text>
+      <text class="cellLbl" x="820" y="543" text-anchor="middle">7.5</text>
     </g>
   </g>
 
-  <!-- COLDATA FILE : samples x covariates -->
+  <!-- ALIGN CARD : subset + reorder -->
   <g>
-    <rect x="420" y="355" width="470" height="210" rx="16" fill="#FFFFFF" stroke="#DCE2E7" stroke-width="2"/>
-    <rect x="428" y="363" width="454" height="6" rx="3" fill="#C9761B"/>
-    <text class="boxTitle mono" x="448" y="400">coldata.rds</text>
-    <text class="boxSub" x="578" y="400">samples &#215; covariates</text>
-    <text class="cellLbl" x="868" y="400" text-anchor="end">small &#183; mixed &#183; often edited</text>
-    <g class="mono">
-      <text class="colHd" fill="#C9761B" x="470" y="432">sample</text>
-      <text class="colHd" fill="#C9761B" x="600" y="432" text-anchor="middle">condition</text>
-      <text class="colHd" fill="#C9761B" x="720" y="432" text-anchor="middle">sex</text>
-      <text class="colHd" fill="#C9761B" x="820" y="432" text-anchor="middle">rin</text>
-      <text class="cellLbl" x="470" y="460">S1</text>
-      <text class="cellLbl" x="600" y="460" text-anchor="middle">CON</text>
-      <text class="cellLbl" x="720" y="460" text-anchor="middle">M</text>
-      <text class="cellLbl" x="820" y="460" text-anchor="middle">7.2</text>
-      <text class="cellLbl" x="470" y="486">S2</text>
-      <text class="cellLbl" x="600" y="486" text-anchor="middle">MDD</text>
-      <text class="cellLbl" x="720" y="486" text-anchor="middle">F</text>
-      <text class="cellLbl" x="820" y="486" text-anchor="middle">6.8</text>
-      <text class="cellLbl" x="470" y="512">S3</text>
-      <text class="cellLbl" x="600" y="512" text-anchor="middle">CON</text>
-      <text class="cellLbl" x="720" y="512" text-anchor="middle">F</text>
-      <text class="cellLbl" x="820" y="512" text-anchor="middle">8.1</text>
-      <text class="cellLbl" x="470" y="538">S4</text>
-      <text class="cellLbl" x="600" y="538" text-anchor="middle">MDD</text>
-      <text class="cellLbl" x="720" y="538" text-anchor="middle">M</text>
-      <text class="cellLbl" x="820" y="538" text-anchor="middle">7.5</text>
+    <!-- feed lines from both boxes into the align card -->
+    <g fill="none" stroke="#E4A24A" stroke-width="2.5" stroke-dasharray="6 6">
+      <path d="M892,215 C 950,215 960,330 1010,345"/>
+      <path d="M892,460 C 950,460 960,360 1010,355"/>
     </g>
+    <rect x="1008" y="250" width="372" height="150" rx="14" fill="#FDF4E3" stroke="#E4A24A" stroke-width="2"/>
+    <text class="alignHd" x="1030" y="286">align by sample ID</text>
+    <text class="code" x="1030" y="316" font-size="13.5">counts[, rownames(coldata)]</text>
+    <text class="alignLn" x="1030" y="348">&#9312;  subset &#8212; drop samples not in colData (86&#8594;59)</text>
+    <text class="alignLn" x="1030" y="372">&#9313;  reorder &#8212; columns follow colData&#8217;s row order</text>
+    <text class="alignLn" x="1030" y="393" font-size="11.5" fill="#8A7A4A">now counts cols == colData rows, 1:1</text>
   </g>
 
-  <!-- ALIGN KEY : matched + reordered by sample ID -->
+  <!-- OUTPUT ARROW from align card -->
   <g>
-    <path d="M945,215 C 1000,215 1000,335 1040,335" fill="none" stroke="#E4A24A" stroke-width="2" stroke-dasharray="6 6"/>
-    <path d="M945,455 C 1000,455 1000,335 1040,335" fill="none" stroke="#E4A24A" stroke-width="2" stroke-dasharray="6 6"/>
-    <rect x="915" y="312" width="52" height="24" rx="6" fill="#FDF4E3" stroke="#E4A24A" stroke-width="1.5"/>
-    <text class="join mono" x="941" y="329" text-anchor="middle">S1&#8230;S4</text>
-    <text class="join" x="1055" y="312">aligned by</text>
-    <text class="join" x="1055" y="332">sample ID</text>
-    <text class="join mono" x="1055" y="356" font-size="11">counts[, rownames(coldata)]</text>
+    <line x1="1194" y1="400" x2="1194" y2="588" stroke="#CBD3DA" stroke-width="3"/>
+    <path d="M1187,582 l7,14 l7,-14 z" fill="#B7C0C8"/>
   </g>
 
-  <!-- REJOIN CAPTION : DESeq2 -->
+  <!-- DESeq2 CAPTION -->
   <g>
-    <rect x="420" y="588" width="620" height="34" rx="8" fill="#F3F5F7" stroke="#DCE2E7" stroke-width="1.5"/>
-    <text class="code" x="440" y="611">&#8594; DESeqDataSetFromMatrix(countData=, colData=)</text>
+    <rect x="690" y="602" width="620" height="34" rx="8" fill="#F3F5F7" stroke="#DCE2E7" stroke-width="1.5"/>
+    <text class="code" x="710" y="625">&#8594; DESeqDataSetFromMatrix(countData=, colData=)</text>
   </g>
 </svg>

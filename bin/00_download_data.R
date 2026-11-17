@@ -1,4 +1,3 @@
-#!/usr/bin/env Rscript           # run standalone; Nextflow calls it by name (bin/ is on PATH)
 library(GEOquery)                # parses GEO series-matrix files
 
 ## 1. Raw counts --------------------------------------------------------------
@@ -16,7 +15,11 @@ mtx <- "GSE101521-GPL16791_series_matrix.txt.gz"
 download.file("https://ftp.ncbi.nlm.nih.gov/geo/series/GSE101nnn/GSE101521/matrix/GSE101521-GPL16791_series_matrix.txt.gz", mtx, mode = "wb")
 pd <- pData(getGEO(filename = mtx))   # parse the LOCAL file; getGEO("GSE101521") over the net is flaky
 
-# Pull out the fields we need. GEO stores everything as text -> coerce numerics.
+# ---------------------------------------------------------
+# pause and inspect metadata 
+# ---------------------------------------------------------
+
+# Pull out the fields we need. GEO stores everything as strings -> coerce numerics (change data type)
 coldata <- data.frame(
   row.names = rownames(pd),                  # GSM sample IDs
   diagnosis = pd[["diagnosis:ch1"]],         # raw label, e.g. "major depression" (kept so the mapping is visible)
