@@ -2,8 +2,8 @@
   "image": "bioconductor/bioconductor_docker:RELEASE_3_20",
   "customizations": {
     "vscode": {
-      "extensions": ["REditorSupport.r", "quarto.quarto"]
+      "extensions": ["REditorSupport.r", "nextflow.nextflow"]
     }
   },
-  "postCreateCommand": "Rscript -e 'BiocManager::install(c(\"DESeq2\",\"edgeR\",\"apeglm\",\"GEOquery\",\"pheatmap\",\"EnhancedVolcano\",\"clusterProfiler\",\"org.Hs.eg.db\"), ask=FALSE, update=FALSE)'"
+  "postCreateCommand": "apt-get update && apt-get install -y default-jre-headless && curl -s https://get.nextflow.io | bash && mv nextflow /usr/local/bin/ && Rscript -e 'BiocManager::install(c(\"DESeq2\",\"edgeR\",\"apeglm\",\"GEOquery\",\"pheatmap\",\"EnhancedVolcano\",\"clusterProfiler\",\"org.Hs.eg.db\"), ask=FALSE, update=FALSE)'"
 }
