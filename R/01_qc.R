@@ -26,5 +26,16 @@ pheatmap(d, show_rownames = FALSE, show_colnames = FALSE,
          annotation_col = as.data.frame(colData(dds)["condition"]))
 dev.off()
 
+# flag and drop the clear PCA outlier (extreme PC1)
+pc1 <- prcomp(t(assay(vsd)))$x[, 1]
+outlier <- names(which.max(pc1))
+cat("dropping outlier:", outlier, "\n")
+dds <- dds[, colnames(dds) != outlier]
+
+# PCA again without the outlier
+png("figures/pca_clean.png", width = 700, height = 600)
+print(plotPCA(vst(dds), intgroup = "condition"))
+dev.off()
+
 saveRDS(dds, "data/dds.rds")
-cat("genes after filtering:", nrow(dds), "\n")
+cat("genes:", nrow(dds), " samples:", ncol(dds), "\n")

@@ -10,8 +10,10 @@ if (!file.exists(gz)) download.file(url, gz, mode = "wb")
 counts <- as.matrix(read.delim(gzfile(gz), row.names = 1, check.names = FALSE))
 
 # sample metadata; keep the HiSeq platform only (one sequencing batch)
-gse <- getGEO("GSE101521", GSEMatrix = TRUE)
-pd <- pData(gse[[grep("GPL16791", names(gse))]])
+mtx <- "data/GSE101521-GPL16791_series_matrix.txt.gz"
+mtx_url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE101nnn/GSE101521/matrix/GSE101521-GPL16791_series_matrix.txt.gz"
+if (!file.exists(mtx)) download.file(mtx_url, mtx, mode = "wb")
+pd <- pData(getGEO(filename = mtx))
 
 coldata <- data.frame(
   row.names = rownames(pd),
@@ -25,6 +27,7 @@ coldata <- data.frame(
 # collapse to a simple two-group contrast: control vs MDD
 coldata$condition <- ifelse(grepl("control", coldata$diagnosis, ignore.case = TRUE), "CON", "MDD")
 coldata$condition <- factor(coldata$condition, levels = c("CON", "MDD"))
+coldata$sex <- factor(coldata$sex)
 
 counts <- counts[, rownames(coldata)]
 

@@ -2,5 +2,6 @@ data/
 figures/
 results/
 metadata/
+CLAUDE.md
 .Rhistory
 .RData
