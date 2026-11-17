@@ -1,0 +1,14 @@
+flowchart TB
+    src[/"GSE101521: counts + metadata"/]
+    DOWNLOAD(["DOWNLOAD &nbsp; bin/00_download_data.R"])
+    QC(["QC &nbsp; bin/01_qc.R"])
+    DGE(["DGE &nbsp; bin/02_dge.R"])
+    INTERPRET(["INTERPRET &nbsp; bin/03_interpret.R"])
+    out[/"figures + tables"/]
+
+    src --> DOWNLOAD
+    DOWNLOAD -->|"counts.rds, coldata.rds"| QC
+    QC -->|"dds.rds"| DGE
+    QC -->|"dds.rds"| INTERPRET
+    DGE -->|"res.rds"| INTERPRET
+    INTERPRET --> out

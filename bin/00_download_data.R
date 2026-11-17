@@ -1,35 +1,45 @@
-#!/usr/bin/env Rscript
-library(GEOquery)
+#!/usr/bin/env Rscript           # run standalone; Nextflow calls it by name (bin/ is on PATH)
+library(GEOquery)                # parses GEO series-matrix files
 
-# raw counts (one NCBI-generated matrix: Entrez gene IDs x samples)
+## 1. Raw counts --------------------------------------------------------------
+# NCBI-reprocessed count matrix: integer counts, Entrez gene IDs x samples.
+# This file holds ALL 86 samples (both sequencing platforms) -- we subset later.
 url <- "https://www.ncbi.nlm.nih.gov/geo/download/?type=rnaseq_counts&acc=GSE101521&format=file&file=GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz"
-download.file(url, "counts.tsv.gz", mode = "wb")
-counts <- as.matrix(read.delim(gzfile("counts.tsv.gz"), row.names = 1, check.names = FALSE))
+download.file(url, "counts.tsv.gz", mode = "wb")     # mode="wb" = binary, needed for .gz
+counts <- as.matrix(read.delim(gzfile("counts.tsv.gz"),
+  row.names = 1,            # 1st column (Entrez ID) -> row names
+  check.names = FALSE))     # keep sample IDs verbatim (don't mangle to valid R names)
 
-# sample metadata; keep the HiSeq platform only (one sequencing batch)
+## 2. Sample metadata ---------------------------------------------------------
+# Download just the GPL16791 (HiSeq) series matrix = 59 samples, one batch.
 mtx <- "GSE101521-GPL16791_series_matrix.txt.gz"
 download.file("https://ftp.ncbi.nlm.nih.gov/geo/series/GSE101nnn/GSE101521/matrix/GSE101521-GPL16791_series_matrix.txt.gz", mtx, mode = "wb")
-pd <- pData(getGEO(filename = mtx))
+pd <- pData(getGEO(filename = mtx))   # parse the LOCAL file; getGEO("GSE101521") over the net is flaky
 
+# Pull out the fields we need. GEO stores everything as text -> coerce numerics.
 coldata <- data.frame(
-  row.names = rownames(pd),
-  diagnosis = pd[["diagnosis:ch1"]],
+  row.names = rownames(pd),                  # GSM sample IDs
+  diagnosis = pd[["diagnosis:ch1"]],         # raw label, e.g. "major depression" (kept so the mapping is visible)
   age = as.numeric(pd[["age (yrs):ch1"]]),
   sex = pd[["Sex:ch1"]],
-  rin = as.numeric(pd[["rin:ch1"]]),
-  pmi = as.numeric(pd[["pmi:ch1"]])
+  rin = as.numeric(pd[["rin:ch1"]]),         # RNA integrity number
+  pmi = as.numeric(pd[["pmi:ch1"]])          # post-mortem interval
 )
 
-# collapse to a simple two-group contrast: control vs MDD
-coldata$condition <- ifelse(grepl("control", coldata$diagnosis, ignore.case = TRUE), "CON", "MDD")
-coldata$condition <- factor(coldata$condition, levels = c("CON", "MDD"))
-coldata$sex <- factor(coldata$sex)
+# Collapse to a two-group contrast. CON first = DESeq2 reference level.
+coldata$condition <- factor(
+  ifelse(grepl("control", coldata$diagnosis, ignore.case = TRUE), "CON", "MDD"),
+  levels = c("CON", "MDD"))
+coldata$sex <- factor(coldata$sex)           # REQUIRED: the sex+condition model errors if sex is character
 
+## 3. Align + save ------------------------------------------------------------
+# One line that does two jobs: drop the non-HiSeq columns AND reorder the
+# matrix to match coldata's rows. DESeq2 assumes counts cols == coldata rows.
 counts <- counts[, rownames(coldata)]
 
-saveRDS(counts, "counts.rds")
+saveRDS(counts, "counts.rds")                # binary handoff to 01_qc.R
 saveRDS(coldata, "coldata.rds")
-write.csv(data.frame(sample = rownames(coldata), coldata), "sample_sheet.csv", row.names = FALSE)
+write.csv(data.frame(sample = rownames(coldata), coldata), "sample_sheet.csv", row.names = FALSE)  # human-readable copy
 
-cat("genes x samples:", dim(counts)[1], "x", dim(counts)[2], "\n")
-print(table(coldata$condition))
+cat("genes x samples:", dim(counts)[1], "x", dim(counts)[2], "\n")   # sanity -> 39376 x 59
+print(table(coldata$condition))              # -> CON 29, MDD 30

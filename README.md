@@ -29,6 +29,29 @@ nextflow run main.nf -resume      # re-run; unchanged steps are cached
 Open in GitHub Codespaces — the dev container installs R + Bioconductor packages,
 Java, and Nextflow on first build.
 
+## Pipeline diagram
+Generate it straight from the pipeline (no manual drawing):
+```
+nextflow run main.nf -preview -with-dag dag.html   # open in a browser
+nextflow run main.nf -preview -with-dag dag.png    # needs: apt-get install graphviz
+```
+A cleaned, labelled version lives in `docs/pipeline.mmd`:
+```mermaid
+flowchart TB
+    src[/"GSE101521: counts + metadata"/]
+    DOWNLOAD(["DOWNLOAD &nbsp; bin/00_download_data.R"])
+    QC(["QC &nbsp; bin/01_qc.R"])
+    DGE(["DGE &nbsp; bin/02_dge.R"])
+    INTERPRET(["INTERPRET &nbsp; bin/03_interpret.R"])
+    out[/"figures + tables"/]
+    src --> DOWNLOAD
+    DOWNLOAD -->|"counts.rds, coldata.rds"| QC
+    QC -->|"dds.rds"| DGE
+    QC -->|"dds.rds"| INTERPRET
+    DGE -->|"res.rds"| INTERPRET
+    INTERPRET --> out
+```
+
 ## Sessions (demo-based, no slides)
 One step per session: read the R script, explain the methodology around it, run it inside
 the pipeline (`-resume`), and inspect the published outputs.
