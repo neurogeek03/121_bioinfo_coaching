@@ -1,0 +1,6 @@
+data/
+figures/
+results/
+metadata/
+.Rhistory
+.RData
