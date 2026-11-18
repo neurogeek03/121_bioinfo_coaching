@@ -14,7 +14,7 @@ counts <- as.matrix(read.delim(gzfile("counts.tsv.gz"),
 # Download just the GPL16791 (HiSeq) series matrix = 59 samples, one batch.
 mtx <- "GSE101521-GPL16791_series_matrix.txt.gz"
 download.file("https://ftp.ncbi.nlm.nih.gov/geo/series/GSE101nnn/GSE101521/matrix/GSE101521-GPL16791_series_matrix.txt.gz", mtx, mode = "wb")
-pd <- pData(getGEO(filename = mtx))   # parse the LOCAL file; getGEO("GSE101521") over the net is flaky
+pd <- pData(getGEO(filename = mtx, getGPL = FALSE))   # parse the LOCAL file; getGPL=FALSE skips the flaky network fetch of the platform annotation (we only need pData)
 
 # ---------------------------------------------------------
 # pause and inspect metadata 
