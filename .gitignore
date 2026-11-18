@@ -12,6 +12,10 @@ counts.tsv.gz
 *.rds
 sample_sheet.csv
 
+# --- but DO commit the two raw input files: the pipeline reads them from the repo ---
+!GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz
+!GSE101521-GPL16791_series_matrix.txt.gz
+
 # --- R session junk ---
 .Rhistory
 .RData

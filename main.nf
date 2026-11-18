@@ -6,6 +6,10 @@
 process DOWNLOAD {
     publishDir "${params.outdir}/data", mode: 'copy'
 
+    input:
+    path counts_gz          // raw counts, committed in the repo (NCBI download is flaky)
+    path series_matrix_gz   // GPL16791 series matrix (sample metadata), committed in the repo
+
     output:
     path "counts.rds",  emit: counts
     path "coldata.rds", emit: coldata
@@ -65,7 +69,11 @@ process INTERPRET {
 }
 
 workflow {
-    DOWNLOAD()
+    // Raw inputs live in the repo; Nextflow stages them into the DOWNLOAD work dir.
+    counts_gz        = Channel.fromPath("${projectDir}/GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz")
+    series_matrix_gz = Channel.fromPath("${projectDir}/GSE101521-GPL16791_series_matrix.txt.gz")
+
+    DOWNLOAD(counts_gz, series_matrix_gz)
     QC(DOWNLOAD.out.counts, DOWNLOAD.out.coldata)
     DGE(QC.out.dds)
     INTERPRET(DGE.out.res, QC.out.dds)
