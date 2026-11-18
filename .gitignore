@@ -23,5 +23,6 @@ sample_sheet.csv
 # --- private, not shared with client ---
 CLAUDE.md
 docs/teaching_notes.md
+docs/*cuecard*.md
 
 # Note: hand-made illustrations are kept (docs/pipeline.mmd is tracked).
