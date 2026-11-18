@@ -39,4 +39,4 @@ sig <- rownames(res)[which(res$padj < 0.05)]
 ego <- enrichGO(sig, OrgDb = org.Hs.eg.db, keyType = "ENTREZID",
                 ont = "BP", universe = rownames(res), readable = TRUE)
 write.csv(as.data.frame(ego), "go_BP.csv", row.names = FALSE)
-cat("significant genes:", length(sig), " | enriched GO terms:", nrow(ego), "\n")   # -> 19 | 137
+cat("significant genes:", length(sig), " | enriched GO terms:", nrow(ego), "\n")   # -> 45 | 458

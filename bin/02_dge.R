@@ -27,14 +27,14 @@ dev.off()
 res <- res[order(res$padj), ]
 write.csv(as.data.frame(res), "dge_MDD_vs_CON.csv")
 saveRDS(res, "res.rds")          # handoff to 03_interpret.R
-cat("DE genes (~ condition) at padj < 0.05:", sum(res$padj < 0.05, na.rm = TRUE), "\n")   # -> 19
+cat("DE genes (~ condition) at padj < 0.05:", sum(res$padj < 0.05, na.rm = TRUE), "\n")   # -> 45
 
 ## 4. Covariate model ---------------------------------------------------------
 # Adjust for sex: the formula IS the experimental design. Controlling for sex
-# removes sex-confounded signal and costs power -> fewer hits (19 -> 2).
+# removes sex-confounded signal and costs power -> fewer hits (45 -> 16).
 design(dds) <- ~ sex + condition
 dds <- DESeq(dds)
 res_sex <- lfcShrink(dds, coef = "condition_MDD_vs_CON", type = "apeglm")
 res_sex <- res_sex[order(res_sex$padj), ]
 write.csv(as.data.frame(res_sex), "dge_MDD_vs_CON_adjSex.csv")
-cat("DE genes (~ sex + condition) at padj < 0.05:", sum(res_sex$padj < 0.05, na.rm = TRUE), "\n")   # -> 2
+cat("DE genes (~ sex + condition) at padj < 0.05:", sum(res_sex$padj < 0.05, na.rm = TRUE), "\n")   # -> 16

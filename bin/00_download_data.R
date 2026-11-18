@@ -29,15 +29,10 @@ coldata <- data.frame(
   pmi = as.numeric(pd[["pmi:ch1"]])          # post-mortem interval
 )
 
-# Restrict the case group to DSM-IV MDD *suicides* (MDD-S). The series also
-# contains 9 non-suicide MDDs; we drop them so this is the cleaner, better-
-# powered contrast the paper distinguished (CON 29 vs MDD-S 21). CON first = ref.
-is_con <- grepl("control",     coldata$diagnosis, ignore.case = TRUE)
-is_ns  <- grepl("non-suicide", coldata$diagnosis, ignore.case = TRUE)
+# Collapse to a two-group contrast. CON first = DESeq2 reference level.
 coldata$condition <- factor(
-  ifelse(is_con, "CON", ifelse(is_ns, NA, "MDD")),   # remaining cases = suicides
+  ifelse(grepl("control", coldata$diagnosis, ignore.case = TRUE), "CON", "MDD"),
   levels = c("CON", "MDD"))
-coldata <- coldata[!is.na(coldata$condition), ]       # drop the 9 non-suicide MDDs
 coldata$sex <- factor(coldata$sex)           # REQUIRED: the sex+condition model errors if sex is character
 
 ## 3. Align + save ------------------------------------------------------------
@@ -49,5 +44,5 @@ saveRDS(counts, "counts.rds")                # binary handoff to 01_qc.R
 saveRDS(coldata, "coldata.rds")
 write.csv(data.frame(sample = rownames(coldata), coldata), "sample_sheet.csv", row.names = FALSE)  # human-readable copy
 
-cat("genes x samples:", dim(counts)[1], "x", dim(counts)[2], "\n")   # sanity -> 39376 x 50
-print(table(coldata$condition))              # -> CON 29, MDD 21 (MDD = suicides only)
+cat("genes x samples:", dim(counts)[1], "x", dim(counts)[2], "\n")   # sanity -> 39376 x 59
+print(table(coldata$condition))              # -> CON 29, MDD 30
