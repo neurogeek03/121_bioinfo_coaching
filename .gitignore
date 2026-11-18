@@ -4,6 +4,7 @@ work/
 .nextflow/
 .nextflow.log*
 dag.*                 # auto-generated pipeline DAG (dag.html / dag.mmd / dag.png)
+.gz
 
 # --- stray outputs if a bin/ step is run directly (not via Nextflow) ---
 counts.tsv.gz

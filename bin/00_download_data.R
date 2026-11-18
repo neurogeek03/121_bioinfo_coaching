@@ -1,21 +1,25 @@
 #!/usr/bin/env Rscript
 library(GEOquery)                # parses GEO series-matrix files
 
-## 1. Raw counts --------------------------------------------------------------
-# NCBI-reprocessed count matrix: integer counts, Entrez gene IDs x samples.
-# This file holds ALL 86 samples (both sequencing platforms) -- we subset later.
-url <- "https://www.ncbi.nlm.nih.gov/geo/download/?type=rnaseq_counts&acc=GSE101521&format=file&file=GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz"
-download.file(url, "counts.tsv.gz", mode = "wb")     # mode="wb" = binary, needed for .gz
-counts <- as.matrix(read.delim(gzfile("counts.tsv.gz"),
-  row.names = 1,            # 1st column (Entrez ID) -> row names
-  check.names = FALSE))     # keep sample IDs verbatim (don't mangle to valid R names)
+# ## 1. Raw counts --------------------------------------------------------------
+# # NCBI-reprocessed count matrix: integer counts, Entrez gene IDs x samples.
+# # This file holds ALL 86 samples (both sequencing platforms) -- we subset later.
+# url <- "https://www.ncbi.nlm.nih.gov/geo/download/?type=rnaseq_counts&acc=GSE101521&format=file&file=GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz"
+# download.file(url, "counts.tsv.gz", mode = "wb")     # mode="wb" = binary, needed for .gz
+# counts <- as.matrix(read.delim(gzfile("counts.tsv.gz"),
+#   row.names = 1,            # 1st column (Entrez ID) -> row names
+#   check.names = FALSE))     # keep sample IDs verbatim (don't mangle to valid R names)
 
-## 2. Sample metadata ---------------------------------------------------------
-# Download just the GPL16791 (HiSeq) series matrix = 59 samples, one batch.
-mtx <- "GSE101521-GPL16791_series_matrix.txt.gz"
-download.file("https://ftp.ncbi.nlm.nih.gov/geo/series/GSE101nnn/GSE101521/matrix/GSE101521-GPL16791_series_matrix.txt.gz", mtx, mode = "wb")
-pd <- pData(getGEO(filename = mtx, getGPL = FALSE))   # parse the LOCAL file; getGPL=FALSE skips the flaky network fetch of the platform annotation (we only need pData)
+# ## 2. Sample metadata ---------------------------------------------------------
+# # Download just the GPL16791 (HiSeq) series matrix = 59 samples, one batch.
+# mtx <- "GSE101521-GPL16791_series_matrix.txt.gz"
+# download.file("https://ftp.ncbi.nlm.nih.gov/geo/series/GSE101nnn/GSE101521/matrix/GSE101521-GPL16791_series_matrix.txt.gz", mtx, mode = "wb")
+# pd <- pData(getGEO(filename = mtx, getGPL = FALSE))   # parse the LOCAL file; getGPL=FALSE skips the flaky network fetch of the platform annotation (we only need pData)
 
+# download data 
+counts <- as.matrix(read.delim(gzfile("/workspaces/121_bioinfo_coaching/GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz"), row.names = 1, check.names = FALSE))
+mtx <- "GSE101521-GPL16791_series_matrix.txt.gz"    
+pd <- pData(getGEO(filename = mtx, getGPL = FALSE))
 # ---------------------------------------------------------
 # pause and inspect metadata 
 # ---------------------------------------------------------
