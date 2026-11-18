@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 library(GEOquery)                # parses GEO series-matrix files
 
 ## 1. Raw counts --------------------------------------------------------------

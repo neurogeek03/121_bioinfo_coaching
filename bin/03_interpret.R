@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript           # run standalone; Nextflow calls it by name (bin/ is on PATH)
+#!/usr/bin/env Rscript
 library(DESeq2)
 library(EnhancedVolcano)        # volcano plot
 library(pheatmap)               # top-gene heatmap
