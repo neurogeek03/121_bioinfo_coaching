@@ -2,11 +2,12 @@
 # Session 2 opener — LOOK at the objects the DOWNLOAD step built, before QC
 # feeds them to DESeq2. Nothing here changes anything; it just inspects them.
 #
-# Run from the repo root:   Rscript scratch/preview_objects.R
-# or open in RStudio and step through it line by line (nicer for teaching).
+# Run from the repo root:   Rscript "scratch/preview RDS objects.R"
+# or open in RStudio / VS Code and step through it line by line (nicer for teaching).
+# Companion script: "preview DDS object.R" inspects the dds the QC step builds.
 
-counts  <- readRDS("results/data/counts.rds")   # integer matrix: genes x samples
-coldata <- readRDS("results/data/coldata.rds")  # the sample sheet (design / metadata)
+counts  <- readRDS("counts.rds")   # integer matrix: genes x samples
+coldata <- readRDS("coldata.rds")  # the sample sheet (design / metadata)
 
 ## ---- The counts matrix: what does it look like? ----------------------------
 head(counts[, 1:6])           # <- first 6 genes x 6 samples, so it fits the screen
