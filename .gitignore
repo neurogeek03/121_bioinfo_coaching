@@ -25,4 +25,8 @@ CLAUDE.md
 docs/teaching_notes.md
 docs/*cuecard*.md
 
+# --- dropped diagram: dds anatomy (not used) ---
+docs/dds_anatomy.png
+docs/dds_anatomy.html
+
 # Note: hand-made illustrations are kept (docs/pipeline.mmd is tracked).

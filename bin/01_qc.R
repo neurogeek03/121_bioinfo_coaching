@@ -1,6 +1,5 @@
 #!/usr/bin/env Rscript
-library(DESeq2)                  # count modelling + VST
-library(pheatmap)               # the sample-distance heatmap
+library(DESeq2)                  # count modelling + normalization
 
 ## 1. Build the DESeq2 object -------------------------------------------------
 # Bundles counts + sample sheet + the model formula into one object. The files
@@ -20,20 +19,14 @@ png("libsize.png", width = 1000, height = 500)
 barplot(colSums(counts(dds)), las = 2, cex.names = 0.5, main = "Library size")
 dev.off()
 
-# VST = variance-stabilizing transform: puts samples on a comparable scale so
-# plots aren't dominated by high-count genes. For visualization ONLY, not testing.
-vsd <- vst(dds)
+# For the plots we put samples on a comparable scale: log the normalized counts
+# so a few very high-count genes don't dominate. VISUALIZATION ONLY -- the DE
+# test later uses the raw counts, not this.
+ntd <- normTransform(dds)        # = log2(normalized counts + 1)
 
 # PCA: do samples cluster by group? (For brain MDD, expect heavy overlap.)
 png("pca.png", width = 700, height = 600)
-print(plotPCA(vsd, intgroup = "condition"))
-dev.off()
-
-# Sample-to-sample distances: another view of outliers / batch structure.
-d <- as.matrix(dist(t(assay(vsd))))
-png("sample_dist.png", width = 800, height = 700)
-pheatmap(d, show_rownames = FALSE, show_colnames = FALSE,
-         annotation_col = as.data.frame(colData(dds)["condition"]))
+print(plotPCA(ntd, intgroup = "condition"))
 dev.off()
 
 ## 4. Drop the PCA outlier ----------------------------------------------------
@@ -47,24 +40,24 @@ dev.off()
 # Dropping it is defensible because it's a documented, single PC1 extreme and
 # the downstream conclusions hold with it removed. (Here: GSM2705375, an MDD
 # case.) Identify, drop, re-plot -- don't rabbit-hole.
-pc1 <- prcomp(t(assay(vsd)))$x[, 1]
+pc1 <- prcomp(t(assay(ntd)))$x[, 1]
 outlier <- names(which.max(pc1))
 cat("dropping outlier:", outlier, "\n")
 dds <- dds[, colnames(dds) != outlier]
 
-# Re-VST the cleaned object once, then view it two ways.
-vsd_clean <- vst(dds)
+# Re-log the cleaned object once, then view it two ways.
+ntd_clean <- normTransform(dds)
 
 # By condition: this is the PCA our DE analysis actually runs on.
 png("pca_clean.png", width = 700, height = 600)
-print(plotPCA(vsd_clean, intgroup = "condition"))
+print(plotPCA(ntd_clean, intgroup = "condition"))
 dev.off()
 
 # By sex: same samples, coloured by sex instead. If a PC separates by sex, that
 # variation is real but off-target -- it motivates adding sex as a covariate
 # (~ sex + condition) in the DGE step, where the DE count drops 45 -> 16.
 png("pca_clean_sex.png", width = 700, height = 600)
-print(plotPCA(vsd_clean, intgroup = "sex"))
+print(plotPCA(ntd_clean, intgroup = "sex"))
 dev.off()
 
 ## 5. Save --------------------------------------------------------------------

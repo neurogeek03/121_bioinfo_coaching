@@ -6,7 +6,7 @@ library(clusterProfiler)        # GO over-representation
 library(org.Hs.eg.db)           # human Entrez <-> symbol / GO mapping
 
 res <- readRDS("res.rds")        # results from 02_dge.R
-dds <- readRDS("dds.rds")        # pre-DESeq object from 01_qc.R (for VST + colData)
+dds <- readRDS("dds.rds")        # pre-DESeq object from 01_qc.R (for the log transform + colData)
 
 ## 1. Readable gene names -----------------------------------------------------
 # Results are keyed by Entrez IDs (stable, from the upstream count pipeline);
@@ -24,8 +24,8 @@ dev.off()
 ## 3. Heatmap of the top genes ------------------------------------------------
 # scale="row" shows each gene's relative pattern across samples (z-scored).
 top <- head(rownames(res), 30)
-vsd <- vst(dds)
-mat <- assay(vsd)[top, ]
+ntd <- normTransform(dds)        # log2(normalized + 1), same transform as QC
+mat <- assay(ntd)[top, ]
 rownames(mat) <- res[top, "symbol"]
 png("heatmap_top.png", width = 700, height = 800)
 pheatmap(mat, scale = "row", show_colnames = FALSE,

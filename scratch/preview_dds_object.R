@@ -24,7 +24,9 @@ dim(dds)                               # 23292 x 58      -- genes x samples (aft
 counts(dds)[1:3, 1:3]                  # the integer count matrix (genes x samples)
 colData(dds)                           # the sample sheet -- the COLUMNS of the counts
 dds$condition                          # pull one colData column directly
-rowData(dds)                           # per-gene table   -- the ROWS of the counts
+rowData(dds)                           # per-gene table -- the ROWS of the counts.
+                                       # "23292 rows and 0 columns": 23292 genes (post-filter),
+                                       # but 0 gene-info columns yet -- DESeq() fills these in S3.
 
 ## ---- The model (the question, not data) ----------------------------------
 design(dds)                            # ~ condition  -- "explain each gene's counts by condition"
