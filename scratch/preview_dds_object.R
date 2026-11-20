@@ -4,9 +4,9 @@
 # bundles them into ONE object that keeps them aligned. Nothing here changes
 # anything; it just inspects.
 #
-# Run from the repo root:   Rscript "scratch/preview DDS object.R"
+# Run from the repo root:   Rscript scratch/preview_dds_object.R
 # or open in RStudio / VS Code and step through it line by line (nicer for teaching).
-# Companion script: "preview RDS objects.R" previews the raw counts + sample sheet.
+# Companion script: preview_rds_objects.R previews the raw counts + sample sheet.
 
 library(DESeq2)                        # needed so the show method + accessors work
 
