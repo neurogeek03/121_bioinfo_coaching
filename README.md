@@ -13,7 +13,7 @@ Each pipeline step is a Nextflow process that wraps **one R script** in `bin/`:
 main.nf                 the pipeline: DOWNLOAD -> QC -> DGE -> INTERPRET
 nextflow.config         params + local executor
 bin/
-  00_download_data.R    download counts, build sample sheet (29 CON vs 30 MDD)
+  00_load_data.R        load counts from data/, build sample sheet (29 CON vs 30 MDD)
   01_qc.R               filter, VST, PCA, sample-distance heatmap, drop outlier
   02_dge.R              DESeq2 (~condition and ~sex+condition), shrinkage, plots
   03_interpret.R        volcano, top-gene heatmap, GO enrichment
@@ -41,7 +41,7 @@ A cleaned, labelled version lives in `docs/pipeline.mmd`:
 ```mermaid
 flowchart TB
     src[/"GSE101521: counts + metadata"/]
-    DOWNLOAD(["DOWNLOAD &nbsp; bin/00_download_data.R"])
+    DOWNLOAD(["DOWNLOAD &nbsp; bin/00_load_data.R"])
     QC(["QC &nbsp; bin/01_qc.R"])
     DGE(["DGE &nbsp; bin/02_dge.R"])
     INTERPRET(["INTERPRET &nbsp; bin/03_interpret.R"])

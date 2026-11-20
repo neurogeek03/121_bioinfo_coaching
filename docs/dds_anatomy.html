@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1600px; height:824px; background:#ffffff;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; }
+  .mono { font-family:"SF Mono","Menlo","Consolas",monospace; }
+  .wrap { padding:34px 48px 0 48px; }
+  h1 { font-size:30px; font-weight:800; color:#1b2638; letter-spacing:-.3px; }
+  .sub { font-size:17px; color:#5b6676; margin-top:6px; }
+
+  .card { position:relative; margin-top:22px; background:#f6f8fc;
+    border:1px solid #e4e9f2; border-radius:18px; padding:26px 30px 30px 30px;
+    box-shadow:0 1px 2px rgba(20,30,60,.04); }
+
+  .toprow { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .cls { font-size:17px; color:#3b4cc0; font-weight:600; }
+  .pill { background:#2f9e8f; color:#fff; font-size:16px; font-weight:600;
+    padding:9px 16px; border-radius:9px; }
+
+  .main { display:flex; gap:22px; }
+  .leftlab { position:absolute; left:14px; top:470px; transform:rotate(-90deg);
+    transform-origin:left top; font-size:12px; color:#8a94a4; white-space:nowrap; }
+
+  .colhead { font-size:17px; font-weight:700; margin-bottom:2px; }
+  .colsub  { font-size:12.5px; color:#808b9b; margin-bottom:8px; }
+  .orange .colhead { color:#c2601a; }
+  .blue   .colhead { color:#3b4cc0; }
+
+  table { border-collapse:separate; border-spacing:0; }
+  .box { border-radius:12px; overflow:hidden; }
+  .rowdata { width:312px; }
+  .rowdata .box { border:2px solid #e0912f; }
+  .rowdata td { background:#fdf1e1; border-bottom:1px solid #f0d6b4; border-right:1px solid #f0d6b4;
+    height:64px; font-size:16px; color:#5a4631; text-align:center; }
+  .rowdata td.sym { font-weight:600; width:150px; }
+  .rowdata tr:last-child td { border-bottom:none; }
+  .rowdata td:last-child { border-right:none; }
+  .rowdata td.foot { height:46px; font-size:13px; color:#b08a5e; font-style:italic; }
+
+  .assay .box { border:2px solid #4a56c4; }
+  .assay td { background:#edeffb; border-bottom:1px solid #d9ddf6; border-right:1px solid #d9ddf6;
+    width:92px; height:64px; font-size:16px; color:#4a5068; text-align:center; }
+  .assay tr:nth-child(2) td { background:#e6e9fa; }
+  .assay tr:last-child td { border-bottom:none; }
+  .assay td:last-child { border-right:none; }
+  .assay td.span { background:#edeffb; font-size:14px; color:#9aa0c0; height:60px; }
+
+  .align { text-align:center; font-size:13px; color:#6b7688; font-weight:600;
+    border-top:2px dotted #c7cfdd; padding-top:8px; margin:10px 0 6px 0; }
+
+  .cdwrap { display:flex; gap:22px; align-items:flex-start; }
+  .cdlabels { width:312px; }
+  .cdlabels div { height:42px; line-height:42px; text-align:right; padding-right:14px;
+    font-size:14px; color:#6b7688; }
+  .cdlabels .lh { height:40px; }
+  .coldata .colhead { color:#c2601a; display:inline; }
+  .coldata .colsub { display:inline; font-size:12.5px; color:#808b9b; margin-left:10px; }
+  .coldata .box { border:2px solid #e0912f; }
+  .coldata td { background:#fdf1e1; border-bottom:1px solid #f0d6b4; border-right:1px solid #f0d6b4;
+    width:92px; height:42px; font-size:15px; color:#5a4631; text-align:center; }
+  .coldata tr:last-child td { border-bottom:none; }
+  .coldata td:last-child { border-right:none; }
+
+  .notes { margin-top:16px; padding-left:8px; }
+  .notes p { font-size:15px; color:#44505f; margin-top:9px; line-height:1.35; }
+  .notes b { color:#1b2638; }
+  .k { font-family:"SF Mono","Menlo",monospace; color:#2b3550; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>dds &mdash; a DESeqDataSet (S4 object)</h1>
+  <div class="sub">One object bundling several tables, locked to shared axes. You pull out each piece with an accessor function.</div>
+
+  <div class="card">
+    <div class="leftlab">same genes &middot; assay rows &equiv; rowData rows</div>
+
+    <div class="toprow">
+      <div class="cls mono">class(dds) = "DESeqDataSet" &middot; isS4(dds) = TRUE</div>
+      <div class="pill mono">design(dds): ~ condition</div>
+    </div>
+
+    <div class="main">
+      <div class="rowdata orange">
+        <div class="colhead mono">rowData(dds)</div>
+        <div class="colsub">per gene &middot; symbol + biotype</div>
+        <table class="box"><tbody>
+          <tr><td class="sym">CXCL8</td><td>protein_coding</td></tr>
+          <tr><td class="sym">MALAT1</td><td>lncRNA</td></tr>
+          <tr><td class="sym">GAPDHP1</td><td>pseudogene</td></tr>
+          <tr><td class="foot" colspan="2">&hellip; + miRNA, snRNA, &hellip; (all biotypes)</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="assay blue">
+        <div class="colhead mono">assays(dds): counts (+ vst, normalized &hellip;)</div>
+        <div class="colsub">genes &times; samples &middot; accessor: counts(dds) / assay(dds)</div>
+        <table class="box"><tbody>
+          <tr><td>42</td><td>17</td><td>88</td><td>31</td><td>9</td><td>55</td><td>12</td><td>63</td></tr>
+          <tr><td>5</td><td>120</td><td>63</td><td>9</td><td>44</td><td>7</td><td>90</td><td>22</td></tr>
+          <tr><td>77</td><td>24</td><td>51</td><td>40</td><td>18</td><td>33</td><td>61</td><td>8</td></tr>
+          <tr><td class="span" colspan="8">&hellip; 23,292 genes &times; 58 samples &hellip;</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="align" style="margin-left:334px;">same samples &middot; assay columns &equiv; colData columns</div>
+
+    <div class="cdwrap">
+      <div class="cdlabels">
+        <div class="lh"></div>
+        <div>condition</div><div>sex</div><div>rin</div>
+      </div>
+      <div class="coldata">
+        <div><span class="colhead mono">colData(dds)</span><span class="colsub">per sample &middot; colData(dds) / dds$condition &middot; each column lines up with the counts column above</span></div>
+        <table class="box" style="margin-top:8px;"><tbody>
+          <tr><td>CON</td><td>MDD</td><td>CON</td><td>MDD</td><td>CON</td><td>MDD</td><td>CON</td><td>MDD</td></tr>
+          <tr><td>M</td><td>F</td><td>F</td><td>M</td><td>M</td><td>F</td><td>F</td><td>M</td></tr>
+          <tr><td>7.2</td><td>6.8</td><td>8.1</td><td>7.5</td><td>6.9</td><td>7.7</td><td>8.0</td><td>7.1</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <p>&bull; Rows are <b>gene-level features of every biotype</b> &mdash; ~20k protein-coding <b>plus</b> lncRNAs, pseudogenes, small RNAs &rarr; <span class="k">~39,376</span> Entrez IDs; the low-count filter keeps <span class="k">23,292</span>.</p>
+    <p>&bull; Subset once, everything stays aligned: <span class="k">dds[, colnames(dds) != outlier]</span> drops a sample from counts AND colData together. More pieces are added <i>into the same object</i> as analysis runs: <span class="k">sizeFactors(dds)</span>, extra <span class="k">assays()</span> (vst), <span class="k">results(dds)</span>.</p>
+  </div>
+</div>
+</body>
+</html>

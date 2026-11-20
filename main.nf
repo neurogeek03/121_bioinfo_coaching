@@ -16,7 +16,7 @@ process DOWNLOAD {
     path "sample_sheet.csv"
 
     script:
-    "00_download_data.R"
+    "00_load_data.R"
 }
 
 process QC {
@@ -70,8 +70,8 @@ process INTERPRET {
 
 workflow {
     // Raw inputs live in the repo; Nextflow stages them into the DOWNLOAD work dir.
-    counts_gz        = Channel.fromPath("${projectDir}/GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz")
-    series_matrix_gz = Channel.fromPath("${projectDir}/GSE101521-GPL16791_series_matrix.txt.gz")
+    counts_gz        = Channel.fromPath("${projectDir}/data/GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz")
+    series_matrix_gz = Channel.fromPath("${projectDir}/data/GSE101521-GPL16791_series_matrix.txt.gz")
 
     DOWNLOAD(counts_gz, series_matrix_gz)
     QC(DOWNLOAD.out.counts, DOWNLOAD.out.coldata)

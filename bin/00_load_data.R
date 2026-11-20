@@ -1,22 +1,22 @@
 #!/usr/bin/env Rscript
 library(GEOquery)                # parses GEO series-matrix files
 
-# Both raw inputs are committed in the repo and staged into this work dir by
-# Nextflow (see main.nf). We read them directly -- no network download, because
-# the NCBI programmatic download is flaky. Filenames are bare: Nextflow stages
-# the inputs here, and a direct `bin/00_download_data.R` run from the repo root
-# finds the committed copies too.
+# Both raw inputs are committed in the repo under data/ -- no network download,
+# because the NCBI programmatic download is flaky. Nextflow stages the inputs
+# into the work dir as bare filenames (see main.nf); a direct run from the repo
+# root reads them from data/. This helper picks whichever location exists.
+input_path <- function(f) if (file.exists(f)) f else file.path("data", f)
 
 ## 1. Raw counts --------------------------------------------------------------
 # NCBI-reprocessed count matrix: integer counts, Entrez gene IDs x samples.
 # This file holds ALL 86 samples (both sequencing platforms) -- we subset later.
-counts <- as.matrix(read.delim(gzfile("GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz"),
+counts <- as.matrix(read.delim(gzfile(input_path("GSE101521_raw_counts_GRCh38.p13_NCBI.tsv.gz")),
   row.names = 1,            # 1st column (Entrez ID) -> row names
   check.names = FALSE))     # keep sample IDs verbatim (don't mangle to valid R names)
 
 ## 2. Sample metadata ---------------------------------------------------------
 # GPL16791 (HiSeq) series matrix = 59 samples, one batch.
-pd <- pData(getGEO(filename = "GSE101521-GPL16791_series_matrix.txt.gz", getGPL = FALSE))  # parse the LOCAL file; getGPL=FALSE skips the flaky network fetch of the platform annotation (we only need pData)
+pd <- pData(getGEO(filename = input_path("GSE101521-GPL16791_series_matrix.txt.gz"), getGPL = FALSE))  # parse the LOCAL file; getGPL=FALSE skips the flaky network fetch of the platform annotation (we only need pData)
 
 # ---------------------------------------------------------
 # pause and inspect metadata
