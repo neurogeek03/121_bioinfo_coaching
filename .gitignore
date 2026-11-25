@@ -30,3 +30,6 @@ docs/dds_anatomy.png
 docs/dds_anatomy.html
 
 # Note: hand-made illustrations are kept (docs/pipeline.mmd is tracked).
+
+# --- session-4 exercise, withheld from the student's copy ---
+scratch/02b_covariate_sex.R
