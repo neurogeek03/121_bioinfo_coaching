@@ -1,14 +1,12 @@
 #!/usr/bin/env Rscript
 library(DESeq2)
 library(EnhancedVolcano)        # volcano plot
-library(pheatmap)               # top-gene heatmap
 library(clusterProfiler)        # GO over-representation
 library(enrichplot)             # dotplot of the enriched terms
 library(ggplot2)                # ggtitle on the dotplot
 library(org.Hs.eg.db)           # human Entrez <-> symbol / GO mapping
 
 res <- readRDS("res.rds")        # results from 02_dge.R
-dds <- readRDS("dds.rds")        # pre-DESeq object from 01_qc.R (for the log transform + colData)
 
 # res already carries a `symbol` column, mapped from Entrez IDs in 02_dge.R.
 
@@ -20,18 +18,7 @@ print(EnhancedVolcano(res, lab = res$symbol,
                       pCutoff = 0.05, FCcutoff = 1))
 dev.off()
 
-## 2. Heatmap of the top genes ------------------------------------------------
-# scale="row" shows each gene's relative pattern across samples (z-scored).
-top <- head(rownames(res), 30)
-ntd <- normTransform(dds)        # log2(normalized + 1), same transform as QC
-mat <- assay(ntd)[top, ]
-rownames(mat) <- res[top, "symbol"]
-png("heatmap_top.png", width = 700, height = 800)
-pheatmap(mat, scale = "row", show_colnames = FALSE,
-         annotation_col = as.data.frame(colData(dds)["condition"]))
-dev.off()
-
-## 3. GO enrichment -----------------------------------------------------------
+## 2. GO enrichment -----------------------------------------------------------
 # What biology do the significant genes share? universe = expressed genes tested
 # (NOT the whole genome) or enrichment is inflated.
 sig <- rownames(res)[which(res$padj < 0.05)]

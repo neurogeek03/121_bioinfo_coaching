@@ -58,7 +58,6 @@ process INTERPRET {
 
     input:
     path "res.rds"
-    path "dds.rds"
 
     output:
     path "*.png"
@@ -76,5 +75,5 @@ workflow {
     DOWNLOAD(counts_gz, series_matrix_gz)
     QC(DOWNLOAD.out.counts, DOWNLOAD.out.coldata)
     DGE(QC.out.dds)
-    INTERPRET(DGE.out.res, QC.out.dds)
+    INTERPRET(DGE.out.res)
 }
