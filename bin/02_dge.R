@@ -4,6 +4,13 @@ library(org.Hs.eg.db)            # human Entrez <-> gene symbol mapping
 
 dds <- readRDS("dds.rds")        # filtered, outlier-dropped object from 01_qc.R
 
+# The design formula is the pipeline's --design parameter. It IS the question we
+# ask: "~ condition" = MDD vs CON; "~ sex + condition" = the same contrast, with
+# sex held constant. Nothing else in the script changes.
+design_str <- Sys.getenv("DESIGN", "~ condition")
+design(dds) <- as.formula(design_str)
+cat("design:", design_str, "\n")
+
 # Columns we read in the results table, in the order we read them.
 cols <- c("symbol", "baseMean", "log2FoldChange", "lfcSE", "pvalue", "padj")
 
@@ -47,8 +54,9 @@ dev.off()
 res <- res[order(res$padj), ]
 write.csv(as.data.frame(res)[, cols], "dge_MDD_vs_CON.csv")
 saveRDS(res, "res.rds")          # handoff to 03_interpret.R
-cat("DE genes (~ condition) at padj < 0.05:", sum(res$padj < 0.05, na.rm = TRUE), "\n")   # -> 45
+cat("DE genes (", design_str, ") at padj < 0.05:",
+    sum(res$padj < 0.05, na.rm = TRUE), "\n")   # ~ condition -> 45; ~ sex + condition -> 16
 
 # Inspect what we just wrote: the top of the table, as we will read it together.
-cat("\ntop 10 by padj (~ condition):\n")
+cat("\ntop 10 by padj:\n")
 print(head(as.data.frame(res)[, cols], 10))

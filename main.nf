@@ -49,7 +49,7 @@ process DGE {
     path "*.png"
 
     script:
-    "02_dge.R"
+    "DESIGN='${params.design}' 02_dge.R"
 }
 
 process INTERPRET {
